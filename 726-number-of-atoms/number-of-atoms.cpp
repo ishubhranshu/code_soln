@@ -1,55 +1,67 @@
-#include <string>
 class Solution {
 public:
-    string countOfAtoms(string formula) {
-        int n = formula.length();
-        stack<unordered_map<string, int>> st;
-        st.push(unordered_map<string, int>());
+    int sti(string &s)
+    {
+        if(s.empty())
+            return 1;
+        int i=0;
+        for(auto c: s)
+            i=i*10+(c-'0');
+        return i;
+    }
+    string countOfAtoms(string f) {
+        // f='('+f+;
+        stack<map<string, int>> st;
+        st.push(map<string, int>());
+        int i=0, n=f.length();
 
-        int i = 0;
-        while (i < n) {
-            if (formula[i] == '(') {
-                st.push(unordered_map<string, int>());
+        while(i<n)
+        {
+            if(f[i]=='(')
+            {
+                st.push(map<string, int>());
                 i++;
-            } else if (formula[i] == ')') {
-                auto top = st.top();
+            }
+            else if(f[i]==')')
+            {
+                map<string, int> c_fs = st.top();
                 st.pop();
                 i++;
-                string multiplierStr;
-                while (i < n && isdigit(formula[i])) {
-                    multiplierStr += formula[i++];
-                }
-                int multiplier = multiplierStr.empty() ? 1 : stoi(multiplierStr);
-                for (auto &p : top) {
-                    p.second *= multiplier;
-                }
-                for (auto &p : top) {
-                    st.top()[p.first] += p.second;
-                }
-            } else {
-                string element;
-                element += formula[i++];
-                while (i < n && islower(formula[i])) {
-                    element += formula[i++];
-                }
-                string countStr;
-                while (i < n && isdigit(formula[i])) {
-                    countStr += formula[i++];
-                }
-                int count = countStr.empty() ? 1 : stoi(countStr);
-                st.top()[element] += count;
+                string mltplr;
+                while(i<n && isdigit(f[i]))
+                    mltplr+=f[i++];
+                
+                int mul = sti(mltplr);
+                for(auto &i: c_fs)
+                    c_fs[i.first]*=mul;
+
+                for(auto &i: c_fs)
+                    st.top()[i.first]+=i.second;
+            }
+            else
+            {
+                string c_f;
+                c_f += (f[i++]);
+                while(i<n && islower(f[i]))
+                    c_f+=f[i++];
+                
+                string c_c="";
+                while(i<n && isdigit(f[i]))
+                    c_c+=f[i++];
+
+                int c_cd=sti(c_c);
+
+                // cout<<typeid(c_cd).name()<<endl;
+                st.top()[c_f]+=c_cd;
             }
         }
 
-        map<string, int> sortedMap(st.top().begin(), st.top().end());
-        string result;
-        for (const auto &p : sortedMap) {
-            result += p.first;
-            if (p.second > 1) {
-                result += to_string(p.second);
-            }
-        }
-
-        return result;
+        string ans="";
+        for(auto i: st.top())
+            if(i.second)
+                ans+=i.first+(i.second>1 ? to_string(i.second) : "");
+            // cout<<i.first<<" "<<i.second<<endl;
+        // cout<<st.size();
+        return ans;
     }
 };
