@@ -1,43 +1,38 @@
 class Solution {
 public:
-    int solve(string &s, char a, char b, int pt)
+    int solve(string &s, string c, int pt)
     {
-        stack<char> st;
-        int pts=0;
-        for(auto c: s)
+        int i=0, j=0;
+        int occ=0;
+        while(j<=s.length())
         {
-            if(st.size()!=0 && st.top()==a && c==b)
+            if(i>=2 && s.substr(i-2, 2)==c)
             {
-                st.pop();
-                pts+=pt;
+                occ++;
+                i-=2;
             }
-            else
-                st.push(c);
+            s[i]=s[j];
+            i++;j++;
         }
-        s="";
-        while(st.size())
-        {
-            s+=st.top();
-            st.pop();
-        }
-        reverse(s.begin(), s.end());
-        return pts;
+        s=s.substr(0, s.length()-2*occ);
+        return pt*occ;
     }
     int maximumGain(string s, int x, int y) {
         int ans=0;
 
         if(x>y)
         {
-            ans+=solve(s, 'a', 'b', x);
-            // cout<<s<<endl;
-            ans+=solve(s, 'b', 'a', y);
+            ans+=solve(s, "ab", x);
+            cout<<s<<endl;
+            ans+=solve(s, "ba", y);
+            cout<<s<<endl;
         }
         else
         {
-            ans+=solve(s, 'b', 'a', y);
-            // cout<<s<<endl;
-            ans+=solve(s, 'a', 'b', x);
-            // cout<<s<<endl;
+            ans+=solve(s, "ba", y);
+            cout<<s<<endl;
+            ans+=solve(s, "ab", x);
+            cout<<s<<endl;
         }
 
         return ans;
