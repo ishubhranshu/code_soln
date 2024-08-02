@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minSwaps(vector<int>& nums) {
-
+        int n=nums.size();
         int tocount=0;
         for(auto i: nums)
             if(i)
@@ -16,17 +16,17 @@ public:
             if(!nums[i])
                 zinwin++;
 
-        nums.insert(nums.end(), nums.begin(), nums.end());
+        // nums.insert(nums.end(), nums.begin(), nums.end());
 
 
         int left=0, right=tocount, ans=zinwin;
         // cout<<tocount<<endl<<endl;
         // cout<<left<<" "<<right<<" "<<zinwin<<endl;
-        while(right<nums.size())
+        while(right<2*nums.size())
         {
-            if(!nums[left])
+            if(!nums[left%(n)])
                 zinwin--;
-            if(!nums[right])
+            if(!nums[right%(n)])
                 zinwin++;
             right++;
             left++;
