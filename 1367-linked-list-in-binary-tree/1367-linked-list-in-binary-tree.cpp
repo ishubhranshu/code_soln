@@ -26,16 +26,18 @@ public:
         if(!root)
             return 0;
 
-        if(root->val == head->val && dfs2(head, root))
+        if((head->val == root->val && dfs2(head, root)) || !head)
             return 1;
 
         return dfs(head, root->left) || dfs(head, root->right);
     }
+
     bool dfs2(ListNode* head, TreeNode* root)
-    {
-        if(head==NULL)
+    {       
+        if(!head)
             return 1;
-        if(!root || root->val != head->val)
+        
+        if(!root || head->val != root->val)
             return 0;
 
         return dfs2(head->next, root->left) || dfs2(head->next, root->right);
