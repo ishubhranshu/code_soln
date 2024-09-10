@@ -16,8 +16,8 @@ public:
         return gcd(b, a%b);
     }
     ListNode* insertGreatestCommonDivisors(ListNode* head) {
-        if(!(head->next))
-            return head;
+        // if(!(head->next))
+        //     return head;
 
         ListNode* ptr=head->next, *prev=head;
 
