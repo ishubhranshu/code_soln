@@ -1,49 +1,39 @@
 class Solution {
 public:
-    int solve(string& s, unordered_map<string, int>&mp, int index)
+    int solve(int ind, string &s, unordered_set<string> &st, int n, vector<vector<int>> &dp)
     {
-        if (index >= s.size()) return 0;
-        
-        string currStr = "";
-        int minExtra = s.size();
-        for (int cutIdx = index; cutIdx < s.size(); cutIdx++)
+        if(ind==s.length())
+            return n;
+
+        if(dp[ind][n]!=-1)
+            return dp[ind][n];
+
+        int ans=s.length();
+        for(auto word: st)
         {
-            currStr.push_back(s[cutIdx]);
-            //currStr will be a string from (index to cutIdx)
-            
-            //if string not in dictionary, we have to delete as they are extra chars
-            int currExtra = (mp.count(currStr))? 0 : currStr.size();
-            int nextExtra = solve(s, mp, cutIdx + 1);
-            int totalExtra = currExtra + nextExtra;
-            
-            minExtra = min(minExtra, totalExtra);
+            int len = word.length();
+            // cout<<word<<" "<<s.substr(ind, len)<<endl;
+            if(s.substr(ind, len) == word)
+                ans=min(ans, solve(ind+len, s, st, n-len, dp));
         }
-        return minExtra;
+        ans=min(ans, solve(ind+1, s, st, n, dp));
+        return dp[ind][n]=ans;
     }
     int minExtraChar(string s, vector<string>& dictionary) {
-        int n = s.size();
-        unordered_map<string, int>mp;
-        for (string& word : dictionary) mp[word]++;
-        vector<int>dp(n + 1, 0);
-        
-        for (int index = n - 1; index >= 0; index--)
+        unordered_set<string> st;
+        for(auto ss: dictionary)
+            st.insert(ss);
+
+        int n=s.length();
+        vector<vector<int>> dp(n+1, vector<int>(n+1, -1));
+        int ans=solve(0, s, st, n, dp);
+
+        for(auto i: dp)
         {
-            string currStr = "";
-            int minExtra = s.size();
-            for (int cutIdx = index; cutIdx < n; cutIdx++)
-            {
-                currStr.push_back(s[cutIdx]);
-        
-                int currExtra = (mp.count(currStr))? 0 : currStr.size();
-                int nextExtra = dp[cutIdx + 1]; 
-                int totalExtra = currExtra + nextExtra;
-
-                minExtra = min(minExtra, totalExtra);
-            }
-            dp[index] = minExtra;
+            for(auto j: i)
+                cout<<j<<" ";
+            cout<<endl;
         }
-        
-        return dp[0];
-
+        return ans;
     }
 };
