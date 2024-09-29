@@ -1,38 +1,60 @@
+class TrieNode{
+    public:
+    vector<TrieNode*> child;
+
+    TrieNode()
+    {
+        child.resize(10, NULL);
+    }
+};
+class Trie{
+    private:
+        TrieNode* root;
+    public:
+        Trie()
+        {
+            root=new TrieNode();
+        }
+
+        void insert(int num)
+        {
+            string s=to_string(num);
+            TrieNode* node=root;
+            for(auto ch: s)
+            {
+                if(node->child[ch-'0'] == NULL)
+                    node->child[ch-'0']=new TrieNode();
+                node=node->child[ch-'0'];
+            }
+        }
+
+        int match(int num)
+        {
+            string s=to_string(num);
+            int ans=0;
+            TrieNode* node=root;
+            for(auto ch: s)
+            {
+                if(node->child[ch-'0'] == NULL)
+                    break;
+                ans++;
+                node=node->child[ch-'0'];
+            }
+            return ans;
+        }
+};
+
 class Solution {
 public:
     int longestCommonPrefix(vector<int>& arr1, vector<int>& arr2) {
-        unordered_set<int> st1;
+        Trie tr;
         for(auto num: arr1)
-        {
-            while(num)
-            {
-                st1.insert(num);
-                num/=10;
-            }
-        }
-        unordered_set<int> st2;
-        for(auto num: arr2)
-        {
-            while(num)
-            {
-                st2.insert(num);
-                num/=10;
-            }
-        }
+            tr.insert(num);
+
         int ans=0;
-        for(auto i: st1)
-        {
-            if(st2.find(i)!=st2.end())
-            {
-                int len=0;
-                while(i)
-                {
-                    len++;
-                    i=i/10;
-                }
-                ans=max(ans, len);
-            }
-        }
+        for(auto num: arr2)
+            ans=max(ans, tr.match(num));
+        
         return ans;
     }
 };
