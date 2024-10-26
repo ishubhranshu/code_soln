@@ -5,11 +5,11 @@ public:
         int n=people.size();
         int left=0,right=n-1;
         int boats=0;
-        while(left<=right && limit<=people[right])
-        {
-            boats++;
-            right--;
-        }
+        // while(left<=right && limit<=people[right])
+        // {
+        //     boats++;
+        //     right--;
+        // }
         // cout<<left<<" "<<right;
         while(left<right)
         {
