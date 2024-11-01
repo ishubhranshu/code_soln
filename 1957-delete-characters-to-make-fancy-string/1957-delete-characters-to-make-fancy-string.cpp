@@ -1,26 +1,17 @@
 class Solution {
 public:
     string makeFancyString(string s) {
-        int count=0;
-        char lastc='-';
-        string ans="";
-        for(auto c: s)
+        if(s.length()<3)
+            return s;
+
+        int j=2;
+        for(int i=2; i<s.length(); i++)
         {
-            if(lastc!=c)
-            {
-                count=1;
-                lastc=c;
-                ans+=c;
-            }
-            else
-            {
-                if(count!=2)
-                {
-                    count++;
-                    ans+=lastc;
-                }
-            }
+            if(s[i]!=s[j-1] || s[i]!=s[j-2])
+                s[j++]=s[i];
         }
-        return ans;
+        s.resize(j);
+
+        return s;
     }
 };
