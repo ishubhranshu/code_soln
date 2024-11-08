@@ -25,10 +25,9 @@ public:
         return ns;
     }
     string countAndSay(int n) {
-        string s="1";
-        for(int i=0; i<n-1; i++)
-            s=solve(s);
+        if(n==1)
+            return "1";
 
-        return s;
+        return solve(countAndSay(n-1));
     }
 };
