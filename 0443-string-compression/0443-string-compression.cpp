@@ -1,46 +1,43 @@
 class Solution {
 public:
     int compress(vector<char>& chars) {
-        int counts=1;
-        char c=chars[0];
         int n=chars.size();
-        string s="";
+        int ind=0, count=1;
+        char c=chars[0];
+        
         for(int i=1; i<n; i++)
         {
             if(chars[i]!=c)
             {
-                if(counts==1)
-                {
-                    s+=c;
-                }
+                if(count==1)
+                    chars[ind++]=c;
                 else
                 {
-                    string scount=to_string(counts);
-                    s+=c;
-                    s+=scount;
+                    chars[ind]=c;
+                    ind++;
+                    string scount=to_string(count);
+                    for(auto sc: scount)
+                        chars[ind++]=sc;
                 }
-                counts=1;
+                count=1;
                 c=chars[i];
             }
             else
-                counts++;
+                count++;
+            // cout<<count<<endl;
         }
-        if(counts==1)
-        {
-            s+=c;
-        }
+        if(count==1)
+            chars[ind++]=c;
         else
         {
-            string scount=to_string(counts);
-            s+=c;
-            s+=scount;
+            chars[ind]=c;
+            ind++;
+            string scount=to_string(count);
+            for(auto sc: scount)
+                chars[ind++]=sc;
         }
 
-        // cout<<s;
-        // chars.resize(s.length());
-        for(int i=0; i<s.length(); i++)
-            chars[i]=s[i];
 
-        return s.length();
+        return ind;
     }
 };
