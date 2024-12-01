@@ -1,45 +1,58 @@
 class Solution {
 public:
-    vector<vector<int>> validArrangement(vector<vector<int>>& pairs) {
-        unordered_map<int, vector<int>> adj;
-        unordered_map<int, int> degree;
 
-        // Step 1: Build adjacency list and calculate degree balance
-        for (auto& pair : pairs) {
-            adj[pair[0]].push_back(pair[1]);
-            degree[pair[0]]--; // Out-degree
-            degree[pair[1]]++; // In-degree
+        
+        
+        vector<vector<int>> validArrangement(vector<vector<int>>& pairs) {
+        vector<int> trav;
+        unordered_map<int, vector<int>> graph;
+        int n=pairs.size();
+        
+        for(auto p: pairs)
+            graph[p[0]].push_back(p[1]);
+
+        unordered_map<int, int> deg;
+        for(auto node: graph)
+        {
+            deg[node.first]-=node.second.size();
+            for(auto neigh: node.second)
+                deg[neigh]++;
         }
-
-        // Step 2: Find starting node
-        int start = pairs[0][0];
-        for (auto& d : degree) {
-            if (d.second < 0) { // Start node should have negative balance
-                start = d.first;
+        
+        int start=pairs[0][0];
+        for(auto d: deg)
+        {
+            if(d.second<0)
+            {
+                start=d.first;
                 break;
             }
         }
+        vector<vector<int>> ans;
+        stack<int> stk;
+        stk.push(start);
 
-        // Step 3: Hierholzer's Algorithm to find Eulerian path
-        vector<vector<int>> result;
-        stack<int> stack;
-        stack.push(start);
 
-        while (!stack.empty()) {
-            int node = stack.top();
-            if (!adj[node].empty()) {
-                int next = adj[node].back();
-                adj[node].pop_back(); // Remove edge
-                stack.push(next);
-            } else {
-                stack.pop();
-                if (!stack.empty()) {
-                    result.push_back({stack.top(), node});
-                }
+        while(!stk.empty())
+        {
+            int node=stk.top();
+            if(graph[node].size())
+            {
+                int next=graph[node].back();
+                graph[node].pop_back();
+                stk.push(next);
+            }
+            else
+            {
+                trav.push_back(node);
+                stk.pop();
             }
         }
+        reverse(trav.begin(), trav.end());
+        
+        for(int i=0; i<trav.size()-1; i++)
+            ans.push_back({trav[i], trav[i+1]});
 
-        reverse(result.begin(), result.end());
-        return result;
+        return ans;
     }
 };
