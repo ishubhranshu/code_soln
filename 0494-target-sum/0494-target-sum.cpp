@@ -1,6 +1,7 @@
 class Solution {
 public:
-    int solve(int ind, vector<int>& nums, int target, int sum, unordered_map<string, int> &ump)
+    int range=0;
+    int solve(int ind, vector<int>& nums, int target, int sum, vector<vector<int>> dp)
     {
         if(ind==nums.size())
         {
@@ -8,14 +9,21 @@ public:
                 return 1;
             return 0;
         }
+        // cout<<sum<<" "<<range<<" "<<sum+target<<endl;
 
-        if(ump.find(to_string(ind)+"-"+to_string(sum))!=ump.end())
-            return ump[to_string(ind)+"-"+to_string(sum)];
+        if(dp[ind][sum+range]!=-1)
+            return dp[ind][sum+range];
 
-        return ump[to_string(ind)+"-"+to_string(sum)]=solve(ind+1, nums, target, sum+nums[ind], ump)+solve(ind+1, nums, target, sum-nums[ind], ump);
+        int total=0;
+            
+        return dp[ind][sum+range]=solve(ind+1, nums, target, sum+nums[ind], dp)+solve(ind+1, nums, target, sum-nums[ind], dp);
     }
     int findTargetSumWays(vector<int>& nums, int target) {
-        unordered_map<string, int> ump;
-        return solve(0, nums, target, 0, ump);
+        int n=nums.size();
+        for(auto i: nums)
+            range+=i;
+
+        vector<vector<int>> dp(n, vector<int>(2*range+1, -1));
+        return solve(0, nums, target, 0, dp);
     }
 };
