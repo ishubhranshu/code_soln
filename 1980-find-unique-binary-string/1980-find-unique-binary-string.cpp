@@ -1,29 +1,52 @@
 class Solution {
 public:
-    bool solve(unordered_set<string> &givenStr, string &s, int &n)
+
+    int binaryToDecimal(string s)
     {
-        if(s.length()==n)
-            return givenStr.find(s) == givenStr.end();
+        int num=0;
+        int n=s.length();
 
-        s.push_back('0');
-        if(solve(givenStr, s, n))
-            return true;
-        s.pop_back();
-        
-        s.push_back('1');
-        if(solve(givenStr, s, n))
-            return true;
-        s.pop_back();
+        for(int i=n-1; i>=0; i--)
+        {
+            if(s[i]=='1')
+                num= num | 1<<(n-1-i);
+        }
+        cout<<s<<" "<<num<<endl;
+        return num;
+    }
+    string decimalToBinary(int num, int n)
+    {
+        string binary="";
 
-        return false;
-        
+        while(num)
+        {
+            if(num & 1)
+                binary="1"+binary;
+            else
+                binary="0"+binary;
+            num>>=1;
+            n--;
+        }
+        while(n--)
+            binary='0'+binary;
 
+        return binary;
     }
     string findDifferentBinaryString(vector<string>& nums) {
-        unordered_set<string> givenStr(nums.begin(), nums.end());
-        int n=nums[0].length();
-        string s="";
-        solve(givenStr, s, n);
-        return s;
+        unordered_set<int> givenNums;
+        for(auto &num: nums)
+            givenNums.insert(binaryToDecimal(num));
+        int n=nums.size();
+        int upper_limit=(1<<n) - 1;
+        cout<<upper_limit<<endl;
+
+        for(int i=0; i<=upper_limit; i++)
+        {
+            cout<<i<<" "<<(givenNums.find(i) == givenNums.end())<<endl;
+            if(givenNums.find(i) == givenNums.end())
+                return decimalToBinary(i, n);
+        }
+
+        return "";
     }
 };
