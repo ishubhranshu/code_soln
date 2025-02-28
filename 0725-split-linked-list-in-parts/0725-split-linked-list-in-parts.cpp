@@ -11,42 +11,41 @@
 class Solution {
 public:
     vector<ListNode*> splitListToParts(ListNode* head, int k) {
-        vector<ListNode*> ans;
-        ListNode* ptr = head;
         int n=0;
+        ListNode* ptr=head;
+        vector<ListNode*> ans;
         while(ptr)
         {
             n++;
             ptr=ptr->next;
         }
-        int m=n;
-        int rem = n%k;
-        
-        // cout<<m<<" "<<endl;
-        ptr = head;
-        while(m)
+
+        int minNodes=n/k;
+        int extraNodes=n%k;
+
+        ptr=head;
+        while(ptr)
         {
-            int size=n/k;
-            if(rem)
+            ListNode* nHead=ptr;
+            ListNode* prev=nullptr;
+            int count=0;
+            while(count<minNodes)
             {
-                size++;
-                rem--;
-            }
-            if(!ptr)
-                break;
-            m-=size;
-            ans.push_back(ptr);
-            ListNode* prev = NULL;
-            while(ptr && size)
-            {
+                count++;
                 prev=ptr;
                 ptr=ptr->next;
-                size--;
             }
-            prev->next=NULL;
+            if(extraNodes)
+            {
+                extraNodes--;
+                prev=ptr;
+                ptr=ptr->next;
+            }
+            prev->next=nullptr;
+            ans.push_back(nHead);
         }
-        while(k-ans.size())
-            ans.push_back({NULL});
+        while(ans.size()<k)
+            ans.push_back(nullptr);
         return ans;
     }
 };
