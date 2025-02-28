@@ -26,7 +26,7 @@ public:
         if(!root)
             return 0;
 
-        if((head->val == root->val && dfs2(head, root)) || !head)
+        if((head->val == root->val && dfs2(head, root)))
             return 1;
 
         return dfs(head, root->left) || dfs(head, root->right);
