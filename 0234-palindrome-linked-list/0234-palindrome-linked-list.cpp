@@ -10,21 +10,46 @@
  */
 class Solution {
 public:
-    ListNode* curr;
-    bool solve(ListNode* head)
+    ListNode* reverse(ListNode* head)
     {
-        if(!head)
-            return true;
-        
-        bool ans=solve(head->next);
-        if(head->val != curr->val)
-            return false;
-        curr=curr->next;
+        if(!head || !head->next)
+            return head;
 
-        return ans;
+        ListNode* newNode=reverse(head->next);
+        head->next->next=head;
+        head->next=nullptr;
+
+        return newNode;
     }
     bool isPalindrome(ListNode* head) {
-        curr=head;
-        return solve(head);
+        if(!head || !head->next)
+            return true;
+        ListNode* slow=head;
+        ListNode* fast=head;
+        ListNode* prev=nullptr;
+
+        while(fast && fast->next)
+        {
+            prev=slow;
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        
+        if(fast)
+            slow=slow->next;
+        prev->next=reverse(slow);
+        
+        slow=head;
+        fast=prev->next;
+
+        while(fast)
+        {
+            if(slow->val != fast->val)
+                return false;
+            slow=slow->next;
+            fast=fast->next;
+        }
+
+        return true;
     }
 };
