@@ -10,20 +10,21 @@
  */
 class Solution {
 public:
-    ListNode* tail;
+    ListNode* curr;
     bool solve(ListNode* head)
     {
         if(!head)
             return true;
-
+        
         bool ans=solve(head->next);
-        if(head->val != tail->val)
+        if(head->val != curr->val)
             return false;
-        tail=tail->next;
+        curr=curr->next;
+
         return ans;
     }
     bool isPalindrome(ListNode* head) {
-        tail=head;
+        curr=head;
         return solve(head);
     }
 };
