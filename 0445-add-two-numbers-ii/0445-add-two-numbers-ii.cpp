@@ -10,50 +10,48 @@
  */
 class Solution {
 public:
-    ListNode* reverse(ListNode* head)
-    {
-        if(!head || !head->next)
-            return head;
-
-        ListNode* newHead=reverse(head->next);
-        head->next->next=head;
-        head->next=nullptr;
-
-        return newHead;
-    }
+    
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         int carry=0;
-        l1=reverse(l1);
-        l2=reverse(l2);
         ListNode* ptr1=l1;
         ListNode* ptr2=l2;
-        ListNode* dummy=new ListNode(-1);
-        ListNode* dPtr=dummy;
+        stack<int> stk1;
+        stack<int> stk2;
         
-        while(carry || ptr1 || ptr2)
+        while(ptr1)
+        {
+            stk1.push(ptr1->val);
+            ptr1=ptr1->next;
+        }
+        while(ptr2)
+        {
+            stk2.push(ptr2->val);
+            ptr2=ptr2->next;
+        }
+        ListNode* dummy=nullptr;
+        
+        while(carry || !stk1.empty() || !stk2.empty())
         {
             int sum=carry;
-            if(ptr1)
+            if(!stk1.empty())
             {
-                sum+=ptr1->val;
-                ptr1=ptr1->next;
+                sum+=stk1.top();
+                stk1.pop();
             }
-            if(ptr2)
+            if(!stk2.empty())
             {
-                sum+=ptr2->val;
-                ptr2=ptr2->next;
+                sum+=stk2.top();
+                stk2.pop();
             }
 
             carry=sum/10;
             sum%=10;
 
             ListNode* newNode=new ListNode(sum);
-            dPtr->next=newNode;
-            dPtr=dPtr->next;
+            newNode->next=dummy;
+            dummy=newNode;
         }
 
-        dummy=dummy->next;
-        dummy=reverse(dummy);
 
         return dummy;
         
