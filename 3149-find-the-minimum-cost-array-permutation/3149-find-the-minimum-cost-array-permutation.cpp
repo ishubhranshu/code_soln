@@ -1,39 +1,44 @@
 class Solution {
 public:
-    int n;
-    int minSum = INT_MAX;
-    vector<int> result;
-
-    void solve(vector<int>& nums, vector<bool>& visited, vector<int>& temp, int sum) {
-        if (minSum <= sum)  //If you remove this, you will get TLE. This eliminates many useless calls further
-            return; // No point in going further because sum is going higher than minVal
-
-        if (temp.size() == n) {
-            sum += abs(temp.back() - nums[temp[0]]);
-            if (sum < minSum) {
-                minSum = sum;
-                result = temp;   
+    int ans=INT_MAX;
+    vector<int> ansVect;
+    void solve(vector<int>& nums, vector<int>& perm, vector<bool> &used, int score)
+    {
+        if(score>=ans)
+            return;
+        int n=nums.size();
+        if(perm.size()==n)
+        {
+            score+=abs(perm.back()-nums[perm[0]]);
+            if(score<ans)
+            {
+                ans=score;
+                ansVect=perm;
             }
+            return;
         }
 
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                temp.push_back(i);
-                solve(nums, visited, temp, sum + abs(temp[temp.size() - 2] - nums[temp[temp.size() - 1]]));
-                temp.pop_back();
-                visited[i] = false;
-            }
+        for(int i=1; i<n; i++)
+        {
+            if(used[i]==1)
+                continue;
+            used[i]=1;
+            perm.push_back(i);
+            int s=perm.size();
+            solve(nums, perm, used, score+abs(perm[s-2]-nums[perm[s-1]]));
+            perm.pop_back();
+            used[i]=0;
         }
     }
-
     vector<int> findPermutation(vector<int>& nums) {
-        n = nums.size();
-        vector<bool> visited(n, false);
-        vector<int> temp = {0}; // lexicographically smallest will start from 0
-        visited[0] = true; // We have used and hence visited 0
+        int n=nums.size();
+        vector<bool> used(n, 0);
+        vector<int> perm;
+        perm.push_back(0);
+        used[0]=1;
+        solve(nums, perm, used, 0);
 
-        solve(nums, visited, temp, 0);
-        return result;
+        cout<<ans;
+        return ansVect;
     }
 };
