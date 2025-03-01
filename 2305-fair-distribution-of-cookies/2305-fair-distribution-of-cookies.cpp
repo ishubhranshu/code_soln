@@ -1,45 +1,32 @@
 class Solution {
 public:
-    int K;
-    int solve(int ind, vector<int>& dist, vector<int>& cookies, int k)
+    int solve(int ind, vector<int>& cookies, vector<int> &distribution)
     {
-        // cout<<ind<<endl;
-        if(ind==cookies.size())
+        int n=cookies.size();
+        if(ind==n)
         {
-            int ans=INT_MIN;
-            for(auto i: dist)
+            int ans=cookies[0];
+            for(auto i: distribution)
             {
                 // cout<<i<<" ";
-                ans=max(ans, i);
-            }    
+                ans=max(i, ans);
+            }
             // cout<<endl;
             return ans;
         }
 
         int ans=INT_MAX;
-        for(int i=0; i<k; i++)
+        int k=distribution.size();
+        for(int kid=0; kid<k; kid++)
         {
-            if(K!=0 && dist[i])
-            {
-                for(auto ii: dist)
-                {
-                    // cout<<ii<<" ";
-                }
-                // cout<<endl;
-            }
-            //     continue;
-            K/=2;
-            dist[i]+=cookies[ind];
-            ans=min(ans, solve(ind+1, dist, cookies, k));
-            dist[i]-=cookies[ind];
-            K*=2;
+            distribution[kid]+=cookies[ind];
+            ans=min(ans, solve(ind+1, cookies, distribution));
+            distribution[kid]-=cookies[ind];
         }
         return ans;
     }
     int distributeCookies(vector<int>& cookies, int k) {
-        K=(1<<k)-1;
-        // cout<<K<<"="<<endl;
-        vector<int> dist(k, 0);
-        return solve(0, dist, cookies, k);
+        vector<int> distribution(k, 0);
+        return solve(0, cookies, distribution);
     }
 };
