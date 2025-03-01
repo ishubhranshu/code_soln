@@ -1,31 +1,33 @@
 class Solution {
 public:
-    vector<int> cans;
-    int solve(int ind, int sum, vector<int>& nums)
+    vector<vector<int>> dp;
+    int solve(int ind, int k, vector<int>& current, vector<int>& nums)
     {
-        if(sum==0)
+        if(k==0)
         {
-            // for(auto i: cans)
-            //     cout<<i<<" ";
-            // cout<<endl;
             return 1;
         }
 
-        if(ind==nums.size() || sum<0)
+        if(k<0 || ind==nums.size())
             return 0;
 
+        if(dp[ind][k]!=-1)
+            return dp[ind][k];
+
         int ans=0;
-        for(int i=ind; i<nums.size(); i++)
+        for(int i=0; i<nums.size(); i++)
         {
-            cans.push_back(nums[i]);
-            ans+=solve(0, sum-nums[i], nums);
-            cans.pop_back();
+            current.push_back(nums[i]);
+            ans+=solve(i, k-nums[i], current, nums);
+            current.pop_back();
         }
 
-        return ans;
+        return dp[ind][k]=ans;
     }
     int combinationSum4(vector<int>& nums, int target) {
-        
-        return solve(0, target, nums);
+        dp.resize(nums.size(), vector<int>(target+1, -1));
+        vector<int> current;
+        return solve(0, target, current, nums);
+        // return ans;
     }
 };
