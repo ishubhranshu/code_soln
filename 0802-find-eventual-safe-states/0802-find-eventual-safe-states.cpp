@@ -1,33 +1,44 @@
 class Solution {
 public:
-    vector<int> safeStates;
-    bool dfs(int node, vector<int> &vis, vector<int> &pathVis, vector<vector<int>> &adj)
-    {
-        vis[node]=true;
-        pathVis[node]=true;
+    
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        // code here
         
-        for(auto neigh: adj[node])
+        int n=graph.size();
+        vector<vector<int>> adj(n);
+        for(int i=0; i<n; i++)
         {
-            if(!vis[neigh])
-                dfs(neigh, vis, pathVis, adj);
+            for(auto neigh: graph[i])
+                adj[neigh].push_back(i);
+        }
+        vector<int> inDeg(n, 0);
+        vector<int> safeStates;
+        
 
-            if(pathVis[neigh])
-                return true;
+        for(int i=0; i<n; i++)
+        {
+            for(auto neigh: adj[i])
+                inDeg[neigh]++;
+        }
+        queue<int> q;
+        for(int i=0; i<n; i++)
+            if(inDeg[i]==0)
+                q.push(i);
+        int count=0; 
+        while(!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            count++;
+            safeStates.push_back(node);
+            for(auto neigh: adj[node])
+            {
+                inDeg[neigh]--;
+                if(inDeg[neigh]==0)
+                    q.push(neigh);
+            }
         }
         
-        safeStates.push_back(node);
-        pathVis[node]=false;
-        return false;
-    }
-    vector<int> eventualSafeNodes(vector<vector<int>>& adj) {
-        int n=adj.size();
-        vector<int> vis(n, false);
-        vector<int> pathVis(n, false);
-        
-        for(int i=0; i<n; i++)
-            if(!vis[i])
-                dfs(i, vis, pathVis, adj);
-                
         sort(safeStates.begin(), safeStates.end());
         return safeStates;
     }
