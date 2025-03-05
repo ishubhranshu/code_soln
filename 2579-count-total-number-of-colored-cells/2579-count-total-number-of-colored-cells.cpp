@@ -1,11 +1,11 @@
 class Solution {
 public:
     long long coloredCells(int n) {
-        long long ans=1;
+        if(n==1)
+            return 1;
 
-        for(int i=1; i<n; i++)
-            ans+=(i*4);
+        n--;
 
-        return ans;
+        return 1+4*((1LL*n*(n+1))/2);
     }
 };
