@@ -1,33 +1,24 @@
 class Solution {
 public:
-    string sorted(string &s)
-    {
-        vector<int> freq(26, 0);
-        for(auto c: s)
-            freq[c-'a']++;
 
-        string srted="";
-        for(int i=0; i<26; i++)
-        {
-            for(int j=0; j<freq[i]; j++)
-                srted+=('a'+i);
-        }
-        return srted;
-    }
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        unordered_map<string, vector<string>> ump;
+        unordered_map<string, vector<string>> groups;
 
-        for(auto str: strs)
-            ump[sorted(str)].push_back(str);
+        for(auto &s: strs)
+        {
+            string sortedS=s;
+            sort(sortedS.begin(), sortedS.end());
+            groups[sortedS].push_back(s);
+        }
 
         vector<vector<string>> ans;
-
-        for(auto i: ump)
+        for(auto &group: groups)
         {
-            vector<string> temp;
-            for(auto s: i.second)
-                temp.push_back(s);
-            ans.push_back(temp);
+            vector<string> grp;
+            for(auto &s: group.second)
+                grp.push_back(s);
+
+            ans.push_back(grp);
         }
 
         return ans;
