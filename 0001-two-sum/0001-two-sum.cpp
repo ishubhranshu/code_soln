@@ -4,10 +4,8 @@ public:
         int n=nums.size();
         for(int first=0; first<n; first++)
         {
-            for(int second=0; second<n; second++)
+            for(int second=first+1; second<n; second++)
             {
-                if(first==second)
-                    continue;
                 if(nums[first]+nums[second]==target)
                     return {first, second};
             }
