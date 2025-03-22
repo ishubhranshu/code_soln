@@ -1,79 +1,42 @@
 class Solution {
 public:
-    class DisjointSet{
-        vector<int> par;
+    void dfs(int u, vector<vector<int>> &graph, vector<bool> &visited, int &edgeCount, int &vertexCount)
+    {
+        visited[u]=true;
+        vertexCount++;
 
-        public:
-        vector<int> size;
-            DisjointSet(int n)
-            {
-                par.resize(n);
-                size.resize(n, 1);
-                for(int i=0; i<n; i++)
-                    par[i]=i;
-            }
-            int getPar(int x)
-            {
-                if(par[x]==x)
-                    return x;
-
-                return par[x]=getPar(par[x]);
-            }
-
-            void merge(int x, int y)
-            {
-                int px=getPar(x);
-                int py=getPar(y);
-
-                if(px==py)
-                    return;
-                if(size[px] > size[py])
-                {
-                    size[px]+=size[py];
-                    par[py]=px;
-                }
-                else
-                {
-                    size[py]+=size[px];
-                    par[px]=py;
-                }
-            }    
-    };
-
+        for(auto v: graph[u])
+        {
+            edgeCount++;
+            if(!visited[v])
+                dfs(v, graph, visited, edgeCount, vertexCount);
+        }
+    }
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
-        DisjointSet ds(n);
-        unordered_map<int, int> edgeCount;
-        
-        for(auto &edge: edges)
+        vector<vector<int>> graph(n);
+        for(auto edge: edges)
         {
             int u=edge[0];
             int v=edge[1];
-            
-            ds.merge(u, v);
+            graph[u].push_back(v);
+            graph[v].push_back(u);
         }
+        vector<bool> visited(n, false);
 
-        for(auto &edge: edges)
-        {
-            int u=edge[0];
-            int v=edge[1];
-            
-            edgeCount[ds.getPar(u)]++;
-        }
         int ans=0;
-        for(auto entry: edgeCount)
-        {
-            int node=entry.first;
-            int edges=entry.second;
-            int vertex=ds.size[node];
-            cout<<node<<" "<<edges<<" "<<vertex<<endl;
-            if(edges == ((vertex)*(vertex-1))/2)
-                ans++;
-        }
         for(int i=0; i<n; i++)
-            if(ds.getPar(i)==i && ds.size[i]==1)
-                ans++;
+        {
+            if(!visited[i])
+            {
+                int edgeCount=0;
+                int vertexCount=0;
+                dfs(i, graph, visited, edgeCount, vertexCount);
+                cout<<i<<" "<<vertexCount<<" "<<edgeCount<<endl;
+                if(edgeCount == (vertexCount*(vertexCount-1)))
+                    ans++;
+            }
+        }
 
         return ans;
-        
     }
 };
