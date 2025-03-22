@@ -1,15 +1,26 @@
 class Solution {
 public:
-    void dfs(int u, vector<vector<int>> &graph, vector<bool> &visited, int &edgeCount, int &vertexCount)
+    void bfs(int u, vector<vector<int>> &graph, vector<bool> &visited, int &edgeCount, int &vertexCount)
     {
+        queue<int> q;
+        q.push(u);
         visited[u]=true;
-        vertexCount++;
 
-        for(auto v: graph[u])
+        while(!q.empty())
         {
-            edgeCount++;
-            if(!visited[v])
-                dfs(v, graph, visited, edgeCount, vertexCount);
+            vertexCount++;
+            int node=q.front();
+            q.pop();
+
+            for(auto v: graph[node])
+            {
+                edgeCount++;
+                if(!visited[v])
+                {
+                    q.push(v);
+                    visited[v]=true;
+                }
+            }
         }
     }
     int countCompleteComponents(int n, vector<vector<int>>& edges) {
@@ -30,7 +41,7 @@ public:
             {
                 int edgeCount=0;
                 int vertexCount=0;
-                dfs(i, graph, visited, edgeCount, vertexCount);
+                bfs(i, graph, visited, edgeCount, vertexCount);
                 cout<<i<<" "<<vertexCount<<" "<<edgeCount<<endl;
                 if(edgeCount == (vertexCount*(vertexCount-1)))
                     ans++;
