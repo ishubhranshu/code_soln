@@ -2,22 +2,29 @@ class Solution {
 public:
     int countDays(int days, vector<vector<int>>& meetings) {
         sort(meetings.begin(), meetings.end());
-        int freeDays=0;
-        int lastEnd=1;
-        int n=meetings.size();
-        freeDays+=(meetings[0][0]-lastEnd);
-        lastEnd=meetings[0][1];
-        for(int i=1; i<n; i++)
-        {
-            int meetStart=meetings[i][0];
-            int meetEnd=meetings[i][1];
+        int ans=0;
 
-            if(meetStart > lastEnd)
-                freeDays+=(meetStart-lastEnd-1);
-            lastEnd=max(lastEnd, meetEnd);
+        int start=meetings[0][0];
+        int end=meetings[0][1];
+        ans+=(start-1);
+
+        for(auto meet: meetings)
+        {
+            // cout<<ans<<" ";
+            int cStart=meet[0];
+            int cEnd=meet[1];
+            
+            if(cStart>end)
+                ans+=(cStart-end-1);
+
+            start=cStart;
+            end=max(end, cEnd);
         }
-        if(lastEnd<days)
-            freeDays+=(days-lastEnd);
-        return freeDays;
+        // cout<<ans<<" ";
+        ans+=(max(0, days-end));
+        // cout<<ans<<" ";
+
+        return ans;
+
     }
 };
